@@ -1,0 +1,14 @@
+report for data size: 4
+fastest 1-to-1:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 54,799,836
+fastest 2-to-2:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 14,955,060 (27.29)
+fastest 1-to-2:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,885,285 (28.99)
+fastest 2-to-1:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,854,610 (28.93)
+boostq  1-to-1:  data_sz: 4 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,978,466 (10.91)
+boostq  2-to-2:  data_sz: 4 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,271,384 (9.62)
+report for data size: 8
+fastest 1-to-1:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 54,303,810
+fastest 2-to-2:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 13,759,095 (25.34)
+fastest 1-to-2:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,195,217 (27.98)
+fastest 2-to-1:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,287,440 (28.15)
+boostq  1-to-1:  data_sz: 8 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,134,854 (9.46)
+boostq  2-to-2:  data_sz: 8 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 4,866,479 (8.96)

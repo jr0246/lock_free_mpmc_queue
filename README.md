@@ -7,6 +7,7 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 * Bounded queue size (specified at compile time) - size must be a power of two (2^N).
 * Supports trivial and non-trivial data types (with nothrow constructors).
 * No memory allocation or deallocation (aside from queue initialisation and destruction).
+* Significantly outperforms Boost's lock-free queue (see benchmark tests below).
 
 ## Implementation overview
 
@@ -87,6 +88,32 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 
 ## Basic tests
 Acceptance tests, including basic concurrent producer/consumer scenarios, can be found in `test/lock_free_queue_test.hpp`.
+
+## Benchmarking
+The Strauss MPMC Queue (referenced below) has useful benchmarking tool. It has been imported into this project for convenience,
+and can be run using `make report`. The report will be exported as a `.txt` file, and it can be parsed as the excerpt below by running
+`./scripts/report-processing.pl PATH_TO_REPORT_TXT`.
+
+Sample output when run on a 6-core Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz machine running Ubuntu 24.04 shows the queue
+outperforming Boost's lock-free queue by multiple times (testing 4-byte and 8-byte data types)
+(excerpt below from `reports/q-bw-report.sample.txt`):
+
+```
+report for data size: 4
+fastest 1-to-1:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 54,799,836
+fastest 2-to-2:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 14,955,060 (27.29)
+fastest 1-to-2:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,885,285 (28.99)
+fastest 2-to-1:  data_sz: 4 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,854,610 (28.93)
+boostq  1-to-1:  data_sz: 4 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,978,466 (10.91)
+boostq  2-to-2:  data_sz: 4 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,271,384 (9.62)
+report for data size: 8
+fastest 1-to-1:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 54,303,810
+fastest 2-to-2:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 13,759,095 (25.34)
+fastest 1-to-2:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,195,217 (27.98)
+fastest 2-to-1:  data_sz: 8 index_sz: 8 queue_name: mpmc_queue<ff> capacity: 64 bandwidth: 15,287,440 (28.15)
+boostq  1-to-1:  data_sz: 8 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 5,134,854 (9.46)
+boostq  2-to-2:  data_sz: 8 index_sz: - queue_name: boost:lf:queue capacity: 64 bandwidth: 4,866,479 (8.96)
+```
 
 ## Acknowledgements/Credits
 This queue implementation is an extension of approaches taken by the following three queues:
