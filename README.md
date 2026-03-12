@@ -43,7 +43,7 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 - `template<typename U> requires std::is_same_v<U, value_type&> && (std::is_nothrow_move_assignable_v<value_type> || std::is_nothrow_copy_assignable_v<value_type>) constexpr bool pop(U&& d) noexcept`
 
   Pops the head of the queue and assigns the value of head into parameter `d` either via move or copy assignment.
-  The destructor of head is then run. `U` must be the same as `value_type&` and either move or copy constructible.
+  The destructor of head is then run. `U` must be the same as `value_type&` and either nothrow move or copy constructible.
   
   **Returns:** `true` if the item was dequeued and `false` otherwise.
 
@@ -56,7 +56,7 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 
 - `template<typename U> requires std::is_same_v<U, value_type&> && std::is_nothrow_copy_assignable_v<value_type> constexpr bool peek(U&& d) noexcept`
 
-  Copies the value of the head of the element into `d`. `value_type` must be copy assignable.
+  Copies the value of the head of the element into `d`. `value_type` must be nothrow copy assignable.
   
   **Returns:** `true` if the queue is not empty and `false` otherwise.
 
@@ -90,7 +90,7 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 Acceptance tests, including basic concurrent producer/consumer scenarios, can be found in `test/lock_free_queue_test.hpp`.
 
 ## Benchmarking
-The Strauss MPMC Queue (referenced below) has useful benchmarking tool. It has been imported into this project for convenience,
+The Strauss MPMC Queue (referenced below) has a useful benchmarking tool. It has been imported into this project for convenience,
 and can be run using `make report`. The report will be exported as a `.txt` file, and it can be parsed as the excerpt below by running
 `./scripts/report-processing.pl PATH_TO_REPORT_TXT`.
 
@@ -123,7 +123,7 @@ This queue implementation is an extension of approaches taken by the following t
 
 `lock_free_mpmc_queue` mostly builds upon the API of Queue #1. However, while Queue #1 is restricted to use with
 trivial types only, `lock_free_mpmc_queue` extends the functionality to work with non-trivial types `T`
-(provided the constructors of `T` are `nothrow`). `lock_free_mpmc_queue` has also had allocator aware support added.
+(provided the constructors and assignment operators of `T` are `nothrow`). `lock_free_mpmc_queue` has also had allocator aware support added.
 
-In addition, the API of the now queue takes advantage of many modern C++ features, such as extensive use of concepts,
+In addition, the API of the new queue takes advantage of many modern C++ features, such as extensive use of concepts,
 as well as extra guarantees when using `constexpr` by default on method signatures.
