@@ -22,7 +22,7 @@ namespace jr {
         alignas(cache_line_size) std::atomic<size_t> seq{0};
         alignas(T) char buf[sizeof(T)]{};
 
-        ~entry() noexcept {
+        constexpr ~entry() noexcept {
             if (seq & 1U) destruct();
         }
 
@@ -46,7 +46,7 @@ namespace jr {
 
         [[nodiscard]] constexpr index_type get_seq() const noexcept { return seq.load(std::memory_order::acquire); }
 
-        constexpr const T* get_data() const noexcept { return reinterpret_cast<const T*>(buf); }
+        [[nodiscard]] constexpr const T* get_data() const noexcept { return reinterpret_cast<const T*>(&buf); }
     };
 
 
@@ -76,8 +76,7 @@ namespace jr {
         static_assert(N == 0 || bits_in_index() > bits_for_value(N),
                       "type used for enqueue and dequeue indices must be larger than the number of elements that will be held at once (ideally, much larger).")
         ;
-        static_assert(N > 0 && (N & N - 1) == 0,
-                      "size of queue must be a power of two: 1, 2, 4, 8, 16 ...");
+        static_assert(std::has_single_bit(N), "size of queue must be a power of two: 1, 2, 4, 8, 16 ...");
 
         constexpr explicit lock_free_mpmc_queue(const Alloc& alloc = Alloc{}) : _capacity{N},
             _mask{_capacity - 1}, _ring{allocator_traits::allocate(*this, _capacity)}, _allocator{alloc},
