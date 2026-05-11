@@ -85,9 +85,8 @@ namespace jr {
             _mask{_capacity - 1}, _ring{allocator_traits::allocate(*this, _capacity)}, _allocator{alloc},
             _write_index{0}, _read_index{0} {
             for (index_type i = 0; i < _capacity; ++i) {
-                auto e = entry<Data>{};
-                e.set_seq(i << 1);
-                std::construct_at(&_ring[i], e);
+                new (&_ring[i]) entry<Data>{};
+                _ring[i].set_seq(i << 1);
             }
         }
 
