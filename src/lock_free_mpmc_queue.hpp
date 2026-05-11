@@ -43,7 +43,7 @@ namespace jr {
             seq.store(s, std::memory_order_release);
         }
 
-        [[nodiscard]] constexpr index_type get_seq() const noexcept { return seq.load(std::memory_order::acquire); }
+        [[nodiscard]] constexpr index_type get_seq() const noexcept { return seq.load(std::memory_order_acquire); }
 
         [[nodiscard]] constexpr const T* get_data() const noexcept { return reinterpret_cast<const T*>(&buf); }
     };
