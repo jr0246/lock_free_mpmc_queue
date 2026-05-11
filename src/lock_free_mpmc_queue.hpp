@@ -80,7 +80,11 @@ namespace jr {
         constexpr explicit lock_free_mpmc_queue(const Alloc& alloc = Alloc{}) : _capacity{N},
             _mask{_capacity - 1}, _ring{allocator_traits::allocate(*this, _capacity)}, _allocator{alloc},
             _write_index{0}, _read_index{0} {
-            for (index_type i = 0; i < _capacity; ++i) _ring[i].set_seq(i << 1);
+            for (index_type i = 0; i < _capacity; ++i) {
+                auto e = entry<Data>{};
+                e.set_seq(i << 1);
+                std::construct_at(&_ring[i], e);
+            }
         }
 
         ~lock_free_mpmc_queue() noexcept {
