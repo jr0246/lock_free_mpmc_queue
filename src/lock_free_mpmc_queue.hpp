@@ -247,8 +247,8 @@ namespace jr {
         [[nodiscard]] constexpr size_t capacity() const noexcept { return _capacity; }
 
     private:
-        const size_t _capacity;
-        const size_type _mask;
+        size_t _capacity;
+        size_type _mask;
         entry<Data>* _ring;
         Alloc _allocator;
 
