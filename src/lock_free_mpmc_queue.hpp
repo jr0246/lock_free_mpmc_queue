@@ -19,7 +19,7 @@ namespace jr {
         using index_type = uint64_t;
 
         alignas(cache_line_size) std::atomic<size_t> seq{0};
-        alignas(T) char buf[sizeof(T)]{};
+        alignas(T) std::byte buf[sizeof(T)]{};
 
         constexpr ~entry() noexcept {
             if (seq & 1U) destruct();
@@ -28,11 +28,11 @@ namespace jr {
         template <typename... Args>
             requires std::is_nothrow_constructible_v<T, Args&&...>
         constexpr void construct(Args&&... args) noexcept {
-            new(&buf) T(std::forward<Args>(args)...);
+            std::construct_at(get_data(), T(std::forward<Args>(args)...));
         }
 
         constexpr void destruct() noexcept {
-            reinterpret_cast<T*>(&buf)->~T();
+            std::destroy_at(get_data());
         }
 
         constexpr T&& move() noexcept {
@@ -45,7 +45,11 @@ namespace jr {
 
         [[nodiscard]] constexpr index_type get_seq() const noexcept { return seq.load(std::memory_order_acquire); }
 
-        [[nodiscard]] constexpr const T* get_data() const noexcept { return reinterpret_cast<const T*>(&buf); }
+        [[nodiscard]] constexpr const T* get_data() const noexcept { return std::launder(reinterpret_cast<const T*>(&buf)); }
+
+    private:
+        [[nodiscard]] constexpr T* get_data() noexcept { return std::launder(reinterpret_cast<T*>(&buf)); }
+
     };
 
 
@@ -89,7 +93,7 @@ namespace jr {
 
         ~lock_free_mpmc_queue() noexcept {
             for (index_type i = 0; i < _capacity; ++i) {
-                _ring[i].~entry();
+                std::destroy_at(&_ring[i]);
             }
             _allocator.deallocate(_ring, _capacity);
         }
