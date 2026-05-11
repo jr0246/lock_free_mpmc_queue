@@ -46,10 +46,6 @@ namespace jr {
         [[nodiscard]] constexpr index_type get_seq() const noexcept { return seq.load(std::memory_order_acquire); }
 
         [[nodiscard]] constexpr const T* get_data() const noexcept { return std::launder(reinterpret_cast<const T*>(&buf)); }
-
-    private:
-        [[nodiscard]] constexpr T* get_data() noexcept { return std::launder(reinterpret_cast<T*>(&buf)); }
-
     };
 
 
