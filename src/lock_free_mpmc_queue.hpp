@@ -3,7 +3,6 @@
 #include <atomic>
 #include <climits>
 #include <cstddef>
-#include <iomanip>
 #include <memory>
 #include <type_traits>
 
@@ -252,11 +251,9 @@ namespace jr {
         const size_type _mask;
         entry<Data>* _ring;
         Alloc _allocator;
-        // Use (2 * cache line) separation, as some processors will pre-fetch the next cache line if it is noticed that lines in the
-        // cache are being accessed iteratively. This approach incurs costs in memory but reduces the risk of false sharing
-        // between these indices.
-        alignas(2 * cache_line_size) std::atomic<size_type> _write_index;
-        alignas(2 * cache_line_size) std::atomic<size_type> _read_index;
+
+        alignas(cache_line_size) std::atomic<size_type> _write_index;
+        alignas(cache_line_size) std::atomic<size_type> _read_index;
 
         constexpr auto element(size_type cursor) const noexcept {
             return &_ring[cursor & _mask];
