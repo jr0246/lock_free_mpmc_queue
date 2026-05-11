@@ -89,6 +89,9 @@ Lock-free implementation of a multi-producer, multi-consumer queue in C++.
 ## Basic tests
 Acceptance tests, including basic concurrent producer/consumer scenarios, can be found in `test/lock_free_queue_test.hpp`.
 
+Support for Relacy Race Detector tests (using [Relacy](https://github.com/dvyukov/relacy)) has been added. More tests to
+come in future changes.
+
 ## Benchmarking
 The Strauss MPMC Queue (referenced below) has a useful benchmarking tool. It has been imported into this project for convenience,
 and can be run using `make report`. The report will be exported as a `.txt` file, and it can be parsed as the excerpt below by running
